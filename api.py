@@ -8,6 +8,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from knowledge import *
+from knowledge_score import *
+
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -41,3 +43,12 @@ async def covid_check(suhu: float, pilek: str, batuk: str, dahak: str, sesak: st
                  sesak=sesak, dahak=dahak, lemas=lemas)
     engine.run()
     return {"message": engine.COVID}
+
+
+@app.get("/covidscore")
+async def covid_score(suhu: float, pilek: str, batuk: str, dahak: str, sesak: str, lemas: str):
+    engine = CovidScoreCheck()
+    engine.reset(suhu=suhu, pilek=pilek, batuk=batuk,
+                 sesak=sesak, dahak=dahak, lemas=lemas)
+    engine.run()
+    return {"score": engine.SCORE}
